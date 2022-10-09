@@ -1,1 +1,1 @@
-# Mains Volteage Wireless Lighting Controller
+# Mains Voltage Wireless Lighting Controller
