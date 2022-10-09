@@ -63,8 +63,6 @@ void loop()
     EthernetClient client = server.available();
     if (client)
     {
-        Serial.println("new client");
-        // an http request ends with a blank line
         boolean currentLineIsBlank = true;
         while (client.connected())
         {
@@ -72,9 +70,6 @@ void loop()
             {
                 char c = client.read();
                 Serial.write(c);
-                // if you've gotten to the end of the line (received a newline
-                // character) and the line is blank, the http request has ended,
-                // so you can send a reply
                 if (c == '\n' && currentLineIsBlank)
                 {
                     // send a standard http response header
@@ -88,12 +83,7 @@ void loop()
                     // output the value of each analog input pin
                     for (int analogChannel = 0; analogChannel < 6; analogChannel++)
                     {
-                        int sensorReading = analogRead(analogChannel);
-                        client.print("analog input ");
-                        client.print(analogChannel);
-                        client.print(" is ");
-                        client.print(sensorReading);
-                        client.println("<br />");
+                        client.print("<h1>Hello world!</h1>");
                     }
                     client.println("</html>");
                     break;
