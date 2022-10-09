@@ -1,1 +1,1 @@
-# Bathroom Lighting Controller
+# Mains Volteage Wireless Lighting Controller
