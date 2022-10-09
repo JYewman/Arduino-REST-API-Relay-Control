@@ -13,16 +13,50 @@
 
 #include <SPI.h>
 #include <Ethernet.h>
+#include <Log.h>
+#include <RestServer.h>
+#include <RestSettings.h>
 
 byte mac[] = {
     0xFE, 0x4E, 0x0C, 0xB7, 0xA7, 0x08};
 
+#define RELAY_ON LOW
+#define RELAY_OFF HIGH
+int relayPin = 7;
+int relayState = RELAY_OFF;
+
 EthernetServer server(80);
+RestServer rest(server);
+
+void setRelay(char *params = "")
+{
+    if (strncmp(params, "active=1", 8) == 0)
+    {
+        relayState = RELAY_ON;
+        DLOG("on");
+        digitalWrite(relayPin, relayState);
+    }
+    else if (strncmp(params, "active=0", 8) == 0)
+    {
+        relayState = RELAY_OFF;
+        DLOG("off");
+        digitalWrite(relayPin, relayState);
+    }
+
+    rest.addData("active", !relayState);
+}
+
+void getRelay(char *params = "")
+{
+    rest.addData("active", !relayState);
+}
 
 void getIP()
 {
     Serial.print("IP address: ");
     Serial.println(Ethernet.localIP());
+    Serial.print("DNS Server: ");
+    Serial.println(Ethernet.dnsServerIP());
     Serial.print("Gateway IP: ");
     Serial.println(Ethernet.gatewayIP());
     Serial.print("Subnet Mask: ");
@@ -31,7 +65,9 @@ void getIP()
 
 void setup()
 {
-    Ethernet.init(10); // Most Arduino shields
+    LOG_SETUP();
+    LOG("Init...");
+    Ethernet.init(10);
     Serial.begin(115200);
     Serial.println("Initialize Ethernet with DHCP:");
     if (Ethernet.begin(mac) == 0)
@@ -56,49 +92,20 @@ void setup()
     server.begin();
     Serial.print("Web Server Started @ ");
     Serial.println(Ethernet.localIP());
+    Serial.print("Server is at ");
+    Serial.println(Ethernet.localIP());
+
+    // Add routes to the REST Server
+    rest.addRoute(POST, "/relayPin", setRelay);
+    rest.addRoute(GET, "/relayPin", getRelay);
+
+    // Setup relayPin and other sensors
+    pinMode(relayPin, OUTPUT);         // Set Pin7 as output
+    digitalWrite(relayPin, RELAY_OFF); // Turn off relayPin
 }
 
 void loop()
 {
-    EthernetClient client = server.available();
-    if (client)
-    {
-        boolean currentLineIsBlank = true;
-        while (client.connected())
-        {
-            if (client.available())
-            {
-                char c = client.read();
-                Serial.write(c);
-                if (c == '\n' && currentLineIsBlank)
-                {
-                    // send a standard http response header
-                    client.println("HTTP/1.1 200 OK");
-                    client.println("Content-Type: text/html");
-                    client.println("Connection: close"); // the connection will be closed after completion of the response
-                    client.println();
-                    client.println("<!DOCTYPE HTML>");
-                    client.println("<html>");
-                    client.print("<h1>Hello world!</h1>");
-                    client.println("</html>");
-                    break;
-                }
-                if (c == '\n')
-                {
-                    // you're starting a new line
-                    currentLineIsBlank = true;
-                }
-                else if (c != '\r')
-                {
-                    // you've gotten a character on the current line
-                    currentLineIsBlank = false;
-                }
-            }
-        }
-        // give the web browser time to receive the data
-        delay(1);
-        // close the connection:
-        client.stop();
-        Serial.println("client disconnected");
-    }
+    // Run the RestServer
+    rest.run();
 }
