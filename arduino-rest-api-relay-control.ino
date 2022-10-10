@@ -1,6 +1,6 @@
 /*
- * File: bathroom-light-control\bathroom-light-control.ino
- * Project: bathroom-light-control
+ * File: Arduino-REST-API-Relay-Control\bathroom-light-control.ino
+ * Project: Arduino-REST-API-Relay-Control
  * Created Date: Sunday, October 9th 2022, 5:45:13 pm
  * Author: Joshua Yewman
  * Author Email: joshua@gosystem.co.uk
