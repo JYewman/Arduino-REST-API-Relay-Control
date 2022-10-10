@@ -1,6 +1,6 @@
 /*
- * File: c:\Users\joshu\OneDrive - goSystem Solutions Limited\Documents\Programming\Private\bathroom-light-control\bathroom-light-control.ino
- * Project: c:\Users\joshu\OneDrive - goSystem Solutions Limited\Documents\Programming\Private\bathroom-light-control
+ * File: bathroom-light-control\bathroom-light-control.ino
+ * Project: bathroom-light-control
  * Created Date: Sunday, October 9th 2022, 5:45:13 pm
  * Author: Joshua Yewman
  * Author Email: joshua@gosystem.co.uk
