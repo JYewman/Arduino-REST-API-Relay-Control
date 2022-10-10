@@ -13,6 +13,12 @@ This project is one in a collection of Repositories for the SmartKit project. Al
 
 When you first run the project, the system will automatically generate a MAC address and store it in EEPROM, you can then use the API get device information and control/monitor the status of the connected relay(s)
 
+### The API
+This API has 1 POST route:
+- /relayPin which takes the key "active" with "0" for off and "1" for on
+And two GET routes
+- /relayPin which get's the current relay state
+- /getDeviceInfo which returns it's SmartKit device ID.
 
 ## Contributing
 
