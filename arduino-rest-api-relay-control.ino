@@ -1,6 +1,6 @@
 /*
  * File: Arduino-REST-API-Relay-Control\arduino-rest-api-relay-control.ino
- * Project: Arduino-REST-API-Relay-Control
+ * Project: SmartKit
  * Created Date: Sunday, October 9th 2022, 5:45:13 pm
  * Author: Joshua Yewman
  * Author Email: joshua@gosystem.co.uk
