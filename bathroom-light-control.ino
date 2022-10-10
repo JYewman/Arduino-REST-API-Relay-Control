@@ -8,7 +8,7 @@
  * Last Modified:
  * Modified By:
  * -----
- * Copyright (c) 2022 goSysten Solu#tions Limited
+ * Copyright (c) 2022 goSysten Solutions Limited
  */
 
 #include <SPI.h>
@@ -16,9 +16,10 @@
 #include <Log.h>
 #include <RestServer.h>
 #include <RestSettings.h>
+#include <EEPROM.h>
 
-byte mac[] = {
-    0xFE, 0x4E, 0x0C, 0xB7, 0xA7, 0x08};
+byte mac[6] = {0xBA, 0xBE, 0x00, 0x00, 0x00, 0x00};
+char macstr[18];
 
 #define RELAY_ON LOW
 #define RELAY_OFF HIGH
@@ -51,6 +52,11 @@ void getRelay(char *params = "")
     rest.addData("active", !relayState);
 }
 
+void getDeviceInfo(char *params = "")
+{
+    rest.addData("DEVICE ID", "GSIOT-MVRLR");
+}
+
 void getIP()
 {
     Serial.print("IP address: ");
@@ -67,6 +73,25 @@ void setup()
 {
     LOG_SETUP();
     LOG("Init...");
+    // Random MAC address stored in EEPROM
+    if (EEPROM.read(1) == '#')
+    {
+        for (int i = 2; i < 6; i++)
+        {
+            mac[i] = EEPROM.read(i);
+        }
+    }
+    else
+    {
+        randomSeed(analogRead(0));
+        for (int i = 2; i < 6; i++)
+        {
+            mac[i] = random(0, 255);
+            EEPROM.write(i, mac[i]);
+        }
+        EEPROM.write(1, '#');
+    }
+    snprintf(macstr, 18, "%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
     Ethernet.init(10);
     Serial.begin(115200);
     Serial.println("Initialize Ethernet with DHCP:");
@@ -98,6 +123,7 @@ void setup()
     // Add routes to the REST Server
     rest.addRoute(POST, "/relayPin", setRelay);
     rest.addRoute(GET, "/relayPin", getRelay);
+    rest.addRoute(GET, "/getDeviceInfo", getDeviceInfo);
 
     // Setup relayPin and other sensors
     pinMode(relayPin, OUTPUT);         // Set Pin7 as output
