@@ -8,7 +8,7 @@
  * Last Modified:
  * Modified By:
  * -----
- * Copyright (c) 2022 goSysten Solutions Limited
+ * Copyright (c) 2022 goSystem Solutions Limited
  */
 
 #include <SPI.h>
