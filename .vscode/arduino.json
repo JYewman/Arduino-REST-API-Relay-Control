@@ -1,5 +1,6 @@
 {
     "port": "COM6",
     "board": "arduino:avr:uno",
-    "sketch": "bathroom-light-control.ino"
+    "sketch": "arduino-rest-api-relay-control.ino",
+    "programmer": "arduino:avrispmkii"
 }

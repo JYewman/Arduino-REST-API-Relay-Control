@@ -55,6 +55,7 @@ void getRelay(char *params = "")
 void getDeviceInfo(char *params = "")
 {
     rest.addData("DEVICE ID", "GSIOT-MVRLR");
+    rest.addData("DEVICE-UID", 0);
 }
 
 void getIP()
